@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="@string/account">
+        <menu>
+            <group
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/drawer_login"
+                    android:icon="@drawable/ic_login"
+                    android:title="@string/login" />
+                <item
+                    android:id="@+id/drawer_register"
+                    android:icon="@drawable/ic_register"
+                    android:title="@string/register" />
+                <item
+                    android:id="@+id/drawer_logout"
+                    android:icon="@drawable/ic_logout"
+                    android:title="@string/logout" />
+            </group>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/drawer_places_group"
+        android:title="@string/places">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/drawer_my_places"
+                    android:icon="@drawable/ic_favorite"
+                    android:title="@string/my_places" />
+
+                <item
+                    android:id="@+id/drawer_create_place"
+                    android:icon="@drawable/ic_building"
+                    android:title="@string/create_marker" />
+            </group>
+        </menu>
+    </item>
+
+
+</menu>
