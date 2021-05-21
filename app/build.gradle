@@ -65,6 +65,8 @@ dependencies {
 
     // Declare the dependency for the Cloud Firestore library
     implementation 'com.google.firebase:firebase-firestore-ktx'
+    // FirebaseUI for Cloud Firestore
+    implementation 'com.firebaseui:firebase-ui-firestore:7.1.1'
 
     /**
      * https://firebase.google.com/docs/firestore/quickstart?authuser=0#initialize

@@ -1,9 +1,9 @@
 package com.figueroa.geofinalprgoject.models
 
-import android.text.TextUtils
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.IgnoreExtraProperties
-import com.google.type.LatLng
 
 class Models {
 
@@ -12,40 +12,38 @@ class Models {
      */
     @IgnoreExtraProperties
     data class GeoMarker(
-            var id: String? = null,
-            var userId: String? = null,
+            var uid: String? = null,
             var title: String? = null,
             var description: String? = null,
-            var latLng: LatLng? = null,
-            var type: GeoType? = null
+            var latLng: GeoPoint? = null,
+            var type: String? = null,
+            var createdOn: Timestamp? = null
             ) {
-        companion object {
-            const val FIELD_USER_ID = "userId"
-            const val FIELD_TITLE = "title"
-            const val FIELD_DESCRIPTION = "description"
-            const val FIELD_LAT_LNG = "latLng"
-            const val FIELD_TYPE = "type"
+        constructor(data: Map<String, Any>): this() {
+            this.uid = data["uid"] as String
+            this.title = data["title"] as String
+            this.description = data["description"] as String
+            this.latLng = data["latLng"] as GeoPoint
+            this.type = data["type"] as String
+            this.createdOn = data["createdOn"] as Timestamp
         }
+
     }
 
     data class User(
             var userId: String? = null,
             var userEmail: String? = null,
-            var userName: String? = null,
             var geoMarkers: List<GeoMarker>? = null,
             ) {
         constructor(user: FirebaseUser, geoMarkers: List<GeoMarker>): this() {
             this.userId = user.uid
             this.userEmail = user.email
-            if (TextUtils.isEmpty(this.userName)) {
-                this.userName = user.email
-            }
-
             this.geoMarkers = geoMarkers
         }
-    }
-
-    enum class GeoType {
-        INTEREST_POINT, WARNING,
+        constructor(data: Map<String, Any>): this() {
+            this.userId = data["userId"] as String
+            this.userEmail = data["userEmail"] as String
+            this.geoMarkers = data["geoMarkers"] as List<GeoMarker>
+        }
     }
 }

@@ -90,4 +90,22 @@
         android:enabled="false"
         android:text="@string/login"/>
 
+    <RelativeLayout
+        android:id="@+id/form_login_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="#CCFFFFFF"
+        android:visibility="gone">
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:visibility="visible"
+            app:hideAnimationBehavior="inward"
+            app:showAnimationBehavior="outward"
+            app:trackCornerRadius="2dp"/>
+    </RelativeLayout>
+
 </RelativeLayout>

@@ -12,12 +12,14 @@ fun isValidEmail(email: String): Boolean {
     return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()
 }
 
+fun isValidLoginPassword(pass: String): Boolean = pass.trim().length >= 6
+
 fun isValidPassword(pass: String): Pair<Boolean, Int> {
     var valid = false
     var strength = 0
 
     // Password should be minimum minimum 5 characters long
-    if (pass.length >= 6) {
+    if (pass.trim().length >= 6) {
         strength += 1
         valid = true
     }

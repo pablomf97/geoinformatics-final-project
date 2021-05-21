@@ -24,4 +24,9 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="create_account">Create an account</string>
+    <string name="marker_type">Marker type</string>
+    <string name="marker_name">Marker name</string>
+    <string name="marker_description">Marker description</string>
+    <string name="latitude_longitude">Latitude, Longitude</string>
+    <string name="empty_list">Woah, such emptiness... Come back once you create any markers</string>
 </resources>

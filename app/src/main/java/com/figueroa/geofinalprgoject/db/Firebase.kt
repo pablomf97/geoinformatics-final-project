@@ -8,16 +8,33 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class FirebaseDB {
     private var db: FirebaseFirestore = Firebase.firestore
-    private var TAG = "FIRESTORE"
+    private var tag = "FIRESTORE"
 
-    fun getUserGeoMarkers(userId: String): List<Models.GeoMarker> {
-        // TODO("Get the geomarkers created by the user")
-        return listOf()
+    fun getUserGeoMarkers(
+        userId: String,
+        onSuccess: (List<Models.GeoMarker>) -> Unit,
+        onFailure: (Exception?) -> Unit) {
+        db.collection("geo-markers").whereEqualTo("uid", userId)
+            .get().addOnSuccessListener { snapshot ->
+                if (snapshot.documents.isNotEmpty()) {
+                    val documents = snapshot.documents
+                    onSuccess(documents as List<Models.GeoMarker>)
+                } else onFailure(java.lang.Exception("More than one user was returned."))
+
+            }.addOnFailureListener {
+                onFailure(java.lang.Exception("More than one user was returned."))
+            }
+    }
+
+    fun getUserGeoMarkersQuery(userId: String): Query {
+        return db.collection("geo-markers").whereEqualTo("uid", userId)
+            .orderBy("createdOn", Query.Direction.DESCENDING)
     }
 
     /**
@@ -31,11 +48,11 @@ class FirebaseDB {
         db.collection("geoMarkers")
             .add(geoMarker)
             .addOnSuccessListener { documentReference ->
-                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                Log.d(tag, "DocumentSnapshot added with ID: ${documentReference.id}")
                 success = true
             }
             .addOnFailureListener { error ->
-                Log.w(TAG, "Error adding document", error)
+                Log.w(tag, "Error adding document", error)
             }
 
         return success
@@ -81,9 +98,12 @@ class FirebaseAuth(appContext: Context) {
                     val currUser = currentUser()
                     if (currUser != null) {
                         val user = Models.User(currUser, listOf())
-                        onSuccess(user)
-                    } else
-                        onFailure(task.exception)
+
+                        Firebase.firestore.collection("users")
+                            .add(user).addOnSuccessListener { onSuccess(user) }
+                            .addOnFailureListener { e -> onFailure(e) }
+
+                    } else onFailure(task.exception)
                 } else {
                     Log.d(tag, "Firebase.kt::FirebaseAuth::createUser " +
                             "-> Could not create user.")
@@ -100,8 +120,9 @@ class FirebaseAuth(appContext: Context) {
      * @return  If the operation finished successfully, it will return
      *          the logged user. It will return null otherwise.
      */
-    fun signInUser(email: String, password: String): Models.User? {
-        var user: Models.User? = null
+    fun signInUser(email: String, password: String,
+                   onSuccess: (Models.User) -> Unit,
+                   onFailure: (Exception?) -> Unit) {
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -110,13 +131,14 @@ class FirebaseAuth(appContext: Context) {
                             "-> Successfully logged in user.")
                     val currUser = currentUser()
                     if (currUser != null) {
-                        user = Models.User(currUser, listOf())
-                    }
+                        val user = Models.User(currUser, listOf())
+                        onSuccess(user)
+                    } else onFailure(task.exception)
                 } else {
                     Log.d(tag, "Firebase.kt::FirebaseAuth::signInUser " +
                             "-> Could not create user.")
+                    onFailure(task.exception)
                 }
             }
-        return user
     }
 }

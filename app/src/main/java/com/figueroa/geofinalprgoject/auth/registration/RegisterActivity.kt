@@ -21,6 +21,7 @@ import com.figueroa.geofinalprgoject.utils.isValidPassword
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textfield.TextInputLayout
 import kotlin.properties.Delegates
+import kotlin.properties.Delegates.observable
 
 
 class RegisterActivity : AppCompatActivity(), View.OnClickListener {
@@ -40,13 +41,13 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
     // Checking if the form is ready to commit
     // everytime these values change
-    private var isEmailReady: Boolean by Delegates.observable(false) { _, _, _ -> checkForm() }
-    private var isPassReady: Boolean by Delegates.observable(false) { _, _, _ -> checkForm() }
+    private var isEmailReady: Boolean by observable(false) { _, _, _ -> checkForm() }
+    private var isPassReady: Boolean by observable(false) { _, _, _ -> checkForm() }
 
     // Showed when the app is sending
     // the request to Firebase
     private lateinit var loadingLayout: RelativeLayout
-    private var isLoading: Boolean by Delegates.observable(false) {_, _, _ -> showHideLoadScreen() }
+    private var isLoading: Boolean by observable(false) {_, _, _ -> showHideLoadScreen() }
 
     /**
      * Overriding Android's onCreate function
@@ -129,7 +130,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                  * wrong about it to the user.
                  */
                 if (!isPassReady)
-                    formPasswordLayout.error = "Password must be at least 5 characters long!"
+                    formPasswordLayout.error = "Password must be at least 6 characters long!"
 
                 /**
                  * Otherwise, it means that the password

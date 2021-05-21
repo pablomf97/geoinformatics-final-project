@@ -20,6 +20,8 @@ import com.figueroa.geofinalprgoject.R
 import com.figueroa.geofinalprgoject.db.FirebaseAuth
 import com.figueroa.geofinalprgoject.auth.login.LoginActivity
 import com.figueroa.geofinalprgoject.auth.registration.RegisterActivity
+import com.figueroa.geofinalprgoject.db.FirebaseDB
+import com.figueroa.geofinalprgoject.user.GeoMarkerListActivity
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
@@ -35,6 +37,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
 
     // Firebase Auth
     private lateinit var auth: FirebaseAuth
+    private lateinit var userId: String
 
     // Drawer
     private lateinit var drawer: DrawerLayout
@@ -81,7 +84,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
-        supportActionBar?.hide()
 
         // ...and Firebase Auth
         auth = FirebaseAuth(applicationContext)
@@ -314,9 +316,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
      */
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        map.isBuildingsEnabled = true
 
         map.setOnCameraMoveStartedListener {
-
+            // TODO: Get the geomarkers
         }
 
         val uiSettings = map.uiSettings
@@ -349,6 +352,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
                 drawerPlacesGroup.isVisible = false
             }
             else -> {
+                userId = currentUser.uid
+
                 drawerLoginButton.isVisible = false
                 drawerRegisterButton.isVisible = false
 
@@ -367,11 +372,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
             R.id.drawer_logout -> {
                 auth.logout()
                 if (auth.currentUser() == null) {
-                    // TODO: Finish setting up drawer
-                    setUpDrawer()
                     Toast.makeText(applicationContext,
                         "Logged out!",
                         Toast.LENGTH_SHORT).show()
+
+                    // Restarting the activity
+                    finish()
+                    overridePendingTransition(0, 0);
+                    startActivity(intent)
+                    overridePendingTransition(0, 0);
                 } else
                     Toast.makeText(applicationContext,
                         "Sorry, could not perform logout...",
@@ -382,7 +391,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
                 startActivity(intent)
             }
             R.id.drawer_my_places -> {
-                // TODO: My Places
+                val intent = Intent(applicationContext, GeoMarkerListActivity::class.java).apply {
+                    putExtra("userId", userId)
+                }
+                startActivity(intent)
             }
             R.id.drawer_create_place -> {
                 // TODO: Create Place
