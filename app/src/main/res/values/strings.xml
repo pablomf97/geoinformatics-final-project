@@ -8,7 +8,7 @@
     <string name="register">Register</string>
     <string name="login">Login</string>
     <string name="login_to_your_account">Login to your account</string>
-    <string name="my_places">My saved places</string>
+    <string name="my_places">My markers</string>
     <string name="account">Account</string>
     <string name="places">Places</string>
     <string name="create_marker">Create marker</string>
@@ -28,5 +28,8 @@
     <string name="marker_name">Marker name</string>
     <string name="marker_description">Marker description</string>
     <string name="latitude_longitude">Latitude, Longitude</string>
-    <string name="empty_list">Woah, such emptiness... Come back once you create any markers</string>
+    <string name="empty_list">Woah, such emptiness… Come back once you create any markers</string>
+    <string name="saved_markers">Saved markers</string>
+    <string name="create_a_new_marker">Create a new marker.</string>
+    <string name="warning">Warning</string>
 </resources>

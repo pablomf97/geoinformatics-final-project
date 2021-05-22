@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primaryLightColor"
+    tools:context=".user.markers.CreateMarkerActivity">
+
+    <TextView
+        android:id="@+id/form_marker_title"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/primaryColor"
+        android:elevation="@dimen/cardview_default_elevation"
+        android:fontFamily="@font/quicksand_semibold"
+        android:padding="16dp"
+        android:text="@string/create_a_new_marker"
+        android:textColor="@color/white"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/form_marker_type"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/form_marker_title"
+        android:layout_margin="16dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:boxBackgroundColor="@color/white"
+        app:boxStrokeColor="@color/primaryDarkColor"
+        app:helperText="Interest point: this will always show up to other users.\nWarning: This will stop showing up in a couple of hours."
+        app:helperTextEnabled="true"
+        app:helperTextTextColor="@color/white"
+        app:hintEnabled="false">
+
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:hint="@string/marker_type"
+            android:textColor="@color/primaryColor"
+            tools:ignore="LabelFor" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/form_marker_type"
+        android:background="@drawable/top_rounded_corners"
+        android:elevation="@dimen/cardview_default_elevation"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/form_marker_name"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/marker_name"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            app:boxStrokeColor="@color/primaryColor"
+            app:boxStrokeErrorColor="@color/design_default_color_error"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true"
+            app:startIconContentDescription="Title"
+            app:startIconDrawable="@drawable/ic_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:minWidth="88dp"
+                android:minHeight="56dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/form_marker_description"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/marker_name"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
+            app:boxStrokeColor="@color/primaryColor"
+            app:boxStrokeErrorColor="@color/design_default_color_error"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true"
+            app:startIconContentDescription="Title"
+            app:startIconDrawable="@drawable/ic_info">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|start"
+                android:inputType="textMultiLine"
+                android:lines="2"
+                android:maxLines="5"
+                android:minWidth="88dp"
+                android:minHeight="56dp"
+                android:scrollbars="vertical"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/form_marker_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:enabled="false"
+            android:text="@string/create_marker"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/form_marker_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="#CCFFFFFF"
+        android:visibility="gone">
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:visibility="visible"
+            app:hideAnimationBehavior="inward"
+            app:showAnimationBehavior="outward"
+            app:trackCornerRadius="2dp"/>
+    </RelativeLayout>
+
+</RelativeLayout>

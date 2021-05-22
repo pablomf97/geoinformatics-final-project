@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/adorno"
         android:layout_alignParentStart="true"
+        android:fontFamily="@font/quicksand_semibold"
         android:text="@string/marker_name"/>
 
     <TextView
@@ -29,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/bottom_sheet_title"
+        android:fontFamily="@font/quicksand_medium"
         android:text="@string/latitude_longitude"/>
 
     <TextView
@@ -38,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/bottom_sheet_latlng"
         android:layout_alignParentStart="true"
+        android:fontFamily="@font/quicksand_medium"
         android:text="@string/marker_description"
         android:textAlignment="textStart"/>
 
@@ -62,6 +65,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_toEndOf="@id/bottom_sheet_type_image"
+        android:fontFamily="@font/quicksand_semibold"
         android:gravity="center_vertical"
         android:minHeight="36dp"
         android:text="@string/marker_type"

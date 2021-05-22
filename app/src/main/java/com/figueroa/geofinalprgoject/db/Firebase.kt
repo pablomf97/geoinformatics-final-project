@@ -7,6 +7,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -43,19 +44,18 @@ class FirebaseDB {
      *
      * @param geoMarker     The geo-marker to save.
      */
-    fun createGeoMarker(geoMarker: Models.GeoMarker): Boolean {
-        var success = false
-        db.collection("geoMarkers")
+    fun createGeoMarker(geoMarker: Models.GeoMarker,
+                        onSuccess: (DocumentReference) -> Unit,
+                        onFailure: (Exception?) -> Unit) {
+        db.collection("geo-markers")
             .add(geoMarker)
             .addOnSuccessListener { documentReference ->
-                Log.d(tag, "DocumentSnapshot added with ID: ${documentReference.id}")
-                success = true
+                onSuccess(documentReference)
             }
             .addOnFailureListener { error ->
-                Log.w(tag, "Error adding document", error)
+                onFailure(error)
             }
 
-        return success
     }
 }
 

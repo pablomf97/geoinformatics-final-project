@@ -10,6 +10,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,6 +23,7 @@ import com.figueroa.geofinalprgoject.auth.login.LoginActivity
 import com.figueroa.geofinalprgoject.auth.registration.RegisterActivity
 import com.figueroa.geofinalprgoject.db.FirebaseDB
 import com.figueroa.geofinalprgoject.user.GeoMarkerListActivity
+import com.figueroa.geofinalprgoject.user.markers.CreateMarkerActivity
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
@@ -30,8 +32,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.internal.NavigationMenuItemView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import kotlin.properties.Delegates
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
@@ -56,6 +60,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
+    private lateinit var center: LatLng
 
     /**
      * This variable handles the the data
@@ -70,7 +75,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
 
                 if (!map.isMyLocationEnabled) map.isMyLocationEnabled = true
 
-                val center = LatLng(location.latitude, location.longitude)
+                center = LatLng(location.latitude, location.longitude)
                 val cameraPosition = CameraPosition.Builder().target(center).zoom(17f).build()
                 val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
                 map.animateCamera(cameraUpdate)
@@ -332,6 +337,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
     /**
      * Configures the drawer.
      */
+    @SuppressLint("SetTextI18n")
     private fun setUpDrawer() {
         val currentUser = auth.currentUser()
 
@@ -343,8 +349,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
 
         val drawerPlacesGroup: MenuItem = menu.findItem(R.id.drawer_places_group)
 
+        val headerView = navView.getHeaderView(0)
+        val username: TextView = headerView.findViewById(R.id.header_username)
+        val email: TextView = headerView.findViewById(R.id.header_email)
+
         when (currentUser) {
             null -> {
+                username.text = "Anonymous"
+                email.visibility = View.GONE
+
                 drawerLoginButton.isVisible = true
                 drawerRegisterButton.isVisible = true
 
@@ -353,6 +366,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
             }
             else -> {
                 userId = currentUser.uid
+
+                val emailText = currentUser.email
+                username.text = emailText?.split("@")?.get(0) ?: ""
+                email.visibility = View.VISIBLE
+                email.text = emailText ?: ""
 
                 drawerLoginButton.isVisible = false
                 drawerRegisterButton.isVisible = false
@@ -363,6 +381,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
         }
     }
 
+    @SuppressLint("MissingPermission")
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.drawer_login -> {
@@ -396,8 +415,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
                 }
                 startActivity(intent)
             }
+            R.id.drawer_saved_markers -> {
+                // TODO: My saved markers
+            }
             R.id.drawer_create_place -> {
-                // TODO: Create Place
+                if (this::center.isInitialized) {
+                    val intent =
+                        Intent(applicationContext, CreateMarkerActivity::class.java).apply {
+                            putExtra("userId", userId)
+                            putExtra("lat", center.latitude)
+                            putExtra("lng", center.longitude)
+                        }
+                    startActivity(intent)
+                } else
+                    Toast.makeText(applicationContext,
+                        "Location is not yet accessible!",
+                        Toast.LENGTH_SHORT).show()
             }
         }
 

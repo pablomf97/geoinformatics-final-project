@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginVertical="8dp"
             android:layout_toEndOf="@id/list_item_marker_type"
             android:orientation="vertical">
 
@@ -41,6 +42,7 @@
                 style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/quicksand_bold"
                 android:text="@string/marker_name"/>
 
             <TextView
@@ -48,6 +50,8 @@
                 style="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/quicksand_regular"
                 android:maxLines="2"
                 android:text="@string/marker_description"/>
 

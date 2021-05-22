@@ -29,8 +29,13 @@
         <menu>
             <group>
                 <item
-                    android:id="@+id/drawer_my_places"
+                    android:id="@+id/drawer_saved_markers"
                     android:icon="@drawable/ic_favorite"
+                    android:title="@string/saved_markers"/>
+
+                <item
+                    android:id="@+id/drawer_my_places"
+                    android:icon="@drawable/ic_warning"
                     android:title="@string/my_places" />
 
                 <item
