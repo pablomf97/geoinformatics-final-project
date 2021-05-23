@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
@@ -18,30 +19,41 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.figueroa.geofinalprgoject.R
-import com.figueroa.geofinalprgoject.db.FirebaseAuth
 import com.figueroa.geofinalprgoject.auth.login.LoginActivity
 import com.figueroa.geofinalprgoject.auth.registration.RegisterActivity
+import com.figueroa.geofinalprgoject.db.FirebaseAuth
 import com.figueroa.geofinalprgoject.db.FirebaseDB
+import com.figueroa.geofinalprgoject.models.Models
 import com.figueroa.geofinalprgoject.user.GeoMarkerListActivity
 import com.figueroa.geofinalprgoject.user.markers.CreateMarkerActivity
+import com.figueroa.geofinalprgoject.user.markers.MarkerDetailsBottomSheet
+import com.figueroa.geofinalprgoject.utils.calculateDistance
+import com.figueroa.geofinalprgoject.utils.getBitmapFromVector
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.internal.NavigationMenuItemView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
-import kotlin.properties.Delegates
+import java.util.*
+import kotlin.collections.HashMap
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
+
+class MapsActivity : AppCompatActivity(),
+    OnMapReadyCallback,
+    NavigationView.OnNavigationItemSelectedListener,
+    GoogleMap.OnMarkerClickListener
+{
 
     // Firebase Auth
     private lateinit var auth: FirebaseAuth
     private lateinit var userId: String
+
+    // Firebase Firestore
+    private lateinit var db: FirebaseDB
 
     // Drawer
     private lateinit var drawer: DrawerLayout
@@ -58,6 +70,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
     // Location
     private val requestCheckSettings: Int = 0x1
     private lateinit var map: GoogleMap
+    private var markerHash: HashMap<String, Pair<Marker, Models.GeoMarker>> = hashMapOf()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var center: LatLng
@@ -322,16 +335,80 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.isBuildingsEnabled = true
+        map.setOnMarkerClickListener(this)
+        map.clear()
 
         map.setOnCameraMoveStartedListener {
             // TODO: Get the geomarkers
+            if (!this::db.isInitialized) db = FirebaseDB()
+            db.getNearbyMarkers(center,
+                onSuccess = { documents ->
+                    if (documents.isEmpty())
+                        Toast.makeText(applicationContext, "There were no " +
+                                "geomarkers close by!", Toast.LENGTH_SHORT).show()
+                    else {
+                        for (doc in documents) {
+                            val markerId = doc.id
+                            val marker = Models.GeoMarker(doc.data?: mapOf())
+
+                            val markerLocation = LatLng(marker.latLng!!.latitude, marker.latLng!!.longitude)
+                            val distanceToMarker = calculateDistance(center, markerLocation)
+
+                            if (distanceToMarker > 200) {
+                                if (markerHash.contains(markerId)) {
+                                    markerHash[markerId]?.first?.remove()
+                                    markerHash.remove(markerId)
+                                }
+                            } else {
+                                if (!markerHash.contains(markerId)){
+                                    val isOutdated = (marker.type == "WARNING"
+                                            && marker.createdOn?.toDate()?.time?.plus(7200000)!!
+                                            < Date().time)
+                                    if (!isOutdated) {
+                                        val mapMarkerOptions = MarkerOptions()
+                                        mapMarkerOptions.position(
+                                            LatLng(marker.latLng!!.latitude,
+                                                marker.latLng!!.longitude)
+                                        )
+                                        mapMarkerOptions.title(marker.title)
+                                        if (marker.type!!.equals("warning", ignoreCase = true))
+                                            mapMarkerOptions.icon(
+                                                getBitmapFromVector(applicationContext, R.drawable.ic_warning))
+                                        else
+                                            mapMarkerOptions.icon(
+                                                getBitmapFromVector(applicationContext, R.drawable.ic_interest))
+
+
+                                        val mapMarker = map.addMarker(mapMarkerOptions)
+                                        if (mapMarker != null)
+                                            markerHash[markerId] = Pair(mapMarker, marker)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                onFailure = {
+                    Toast.makeText(applicationContext, "Could not get nearby markers",
+                        Toast.LENGTH_SHORT).show()
+                    Log.w("GEO_QUERY_ERROR", it?.message ?: "ERROR")
+                })
         }
 
         val uiSettings = map.uiSettings
 
-        uiSettings.setAllGesturesEnabled(false)
+        uiSettings.isRotateGesturesEnabled = true
+        uiSettings.isCompassEnabled = true
+
+        uiSettings.isTiltGesturesEnabled = true
+
         uiSettings.isZoomControlsEnabled = false
+        uiSettings.isZoomGesturesEnabled = false
+
         uiSettings.isMyLocationButtonEnabled = false
+
+        uiSettings.isScrollGesturesEnabled = false
+        uiSettings.isScrollGesturesEnabledDuringRotateOrZoom = false
     }
 
     /**
@@ -434,6 +511,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, NavigationView.OnN
             }
         }
 
+        return false
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        var markerToShow: Models.GeoMarker? = null
+        markerHash.values.forEach { pair ->
+            if (pair.first.id == marker.id) {
+                markerToShow = pair.second
+                return@forEach
+            }
+        }
+        if (markerToShow != null) {
+            marker.hideInfoWindow()
+            MarkerDetailsBottomSheet(markerToShow!!)
+                .show(supportFragmentManager, "marker_details")
+            return true
+        }
         return false
     }
 }

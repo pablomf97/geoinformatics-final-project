@@ -3,13 +3,12 @@ package com.figueroa.geofinalprgoject.db
 import android.content.Context
 import android.util.Log
 import com.figueroa.geofinalprgoject.models.Models
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -31,6 +30,42 @@ class FirebaseDB {
             }.addOnFailureListener {
                 onFailure(java.lang.Exception("More than one user was returned."))
             }
+    }
+
+    fun getNearbyMarkers(
+        center: LatLng,
+        onSuccess: (documents: List<DocumentSnapshot>) -> Unit,
+        onFailure: (exception: Exception?) -> Unit
+    ) {
+
+        // Approximately 200 meters translated
+        // into latitude and longitude
+        val lat = 0.0144927536231884 * 0.1242742
+        val lng = 0.0181818181818182 * 0.1242742
+
+        // The lower latitude & longitude
+        val lowerLat = center.latitude - lat
+        val lowerLng = center.longitude - lng
+
+        // The greater latitude & longitude
+        val greaterLat = center.latitude + lat
+        val greaterLng = center.longitude + lng
+
+        // Converting them into GeoPoints
+        val lesserGeopoint = GeoPoint(lowerLat, lowerLng)
+        val greaterGeopoint = GeoPoint(greaterLat, greaterLng)
+
+        // Building the query
+        val docRef = Firebase.firestore.collection("geo-markers")
+        val query = docRef.whereGreaterThan("latLng", lesserGeopoint)
+            .whereLessThan("latLng", greaterGeopoint)
+
+        // Requesting to Firebase Firestore
+        query.get().addOnSuccessListener { snapshot ->
+            onSuccess(snapshot.documents)
+        }.addOnFailureListener { exception ->
+            onFailure(exception)
+        }
     }
 
     fun getUserGeoMarkersQuery(userId: String): Query {
