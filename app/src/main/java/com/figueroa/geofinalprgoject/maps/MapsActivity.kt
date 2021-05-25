@@ -516,16 +516,22 @@ class MapsActivity : AppCompatActivity(),
 
     override fun onMarkerClick(marker: Marker): Boolean {
         var markerToShow: Models.GeoMarker? = null
-        markerHash.values.forEach { pair ->
+        var markerId = ""
+        markerHash.forEach { (key, pair) ->
             if (pair.first.id == marker.id) {
                 markerToShow = pair.second
+                markerId = key
                 return@forEach
             }
         }
         if (markerToShow != null) {
             marker.hideInfoWindow()
-            MarkerDetailsBottomSheet(markerToShow!!)
-                .show(supportFragmentManager, "marker_details")
+            if (this::userId.isInitialized)
+                MarkerDetailsBottomSheet(markerToShow!!, markerId, userId)
+                    .show(supportFragmentManager, "marker_details")
+            else
+                MarkerDetailsBottomSheet(markerToShow!!)
+                    .show(supportFragmentManager, "marker_details")
             return true
         }
         return false

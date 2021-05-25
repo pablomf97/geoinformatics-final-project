@@ -32,6 +32,19 @@ class FirebaseDB {
             }
     }
 
+    fun addGeomarkerToUser(userId: String, markerId: String,
+                           onSuccess: () -> Unit,
+                           onFailure: (Exception?) -> Unit) {
+        db.collection("users").whereEqualTo("userId", userId).get()
+            .addOnSuccessListener { snapshot ->
+                val id = snapshot.documents[0].id
+                db.collection("users").document(id)
+                    .update("geoMarkers", FieldValue.arrayUnion(markerId))
+                    .addOnSuccessListener { onSuccess() }
+                    .addOnFailureListener { onFailure(it) }
+            }.addOnFailureListener { onFailure(it) }
+    }
+
     fun getNearbyMarkers(
         center: LatLng,
         onSuccess: (documents: List<DocumentSnapshot>) -> Unit,
