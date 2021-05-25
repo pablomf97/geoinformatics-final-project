@@ -33,4 +33,5 @@
     <string name="create_a_new_marker">Create a new marker.</string>
     <string name="warning">Warning</string>
     <string name="save_marker">Save marker</string>
+    <string name="delete_marker">Delete marker</string>
 </resources>

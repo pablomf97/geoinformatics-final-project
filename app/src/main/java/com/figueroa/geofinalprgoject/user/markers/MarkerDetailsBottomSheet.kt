@@ -1,23 +1,15 @@
 package com.figueroa.geofinalprgoject.user.markers
 
 import android.annotation.SuppressLint
-import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.DynamicDrawableSpan
-import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat.getColor
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.figueroa.geofinalprgoject.R
 import com.figueroa.geofinalprgoject.db.FirebaseDB
 import com.figueroa.geofinalprgoject.models.Models
@@ -73,7 +65,7 @@ class MarkerDetailsBottomSheet(private val marker: Models.GeoMarker,
                 val textView = saveButton.findViewById<TextView>(R.id.save_button_text)
                 textView.text = "Saving"
 
-                FirebaseDB().addGeomarkerToUser(
+                FirebaseDB().addGeoMarkerToUser(
                     userId = userId!!,
                     markerId = markerId!!,
                     onSuccess = {

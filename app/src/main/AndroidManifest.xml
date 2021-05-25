@@ -20,7 +20,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
             tools:ignore="LockedOrientationActivity" />
-        <activity android:name=".user.GeoMarkerListActivity"
+        <activity android:name=".user.markers.GeoMarkerListActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity

@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
-import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
@@ -24,7 +23,7 @@ import com.figueroa.geofinalprgoject.auth.registration.RegisterActivity
 import com.figueroa.geofinalprgoject.db.FirebaseAuth
 import com.figueroa.geofinalprgoject.db.FirebaseDB
 import com.figueroa.geofinalprgoject.models.Models
-import com.figueroa.geofinalprgoject.user.GeoMarkerListActivity
+import com.figueroa.geofinalprgoject.user.markers.GeoMarkerListActivity
 import com.figueroa.geofinalprgoject.user.markers.CreateMarkerActivity
 import com.figueroa.geofinalprgoject.user.markers.MarkerDetailsBottomSheet
 import com.figueroa.geofinalprgoject.utils.calculateDistance
@@ -144,6 +143,10 @@ class MapsActivity : AppCompatActivity(),
     override fun onResume() {
         super.onResume()
         setUpDrawer()
+        if (this::map.isInitialized) {
+            map.clear()
+            markerHash.clear()
+        }
     }
     /**
      * Checks that all permissions were granted
