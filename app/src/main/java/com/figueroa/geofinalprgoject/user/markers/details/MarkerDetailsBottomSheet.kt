@@ -1,4 +1,4 @@
-package com.figueroa.geofinalprgoject.user.markers
+package com.figueroa.geofinalprgoject.user.markers.details
 
 import android.annotation.SuppressLint
 import android.os.Bundle

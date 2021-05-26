@@ -23,9 +23,10 @@ import com.figueroa.geofinalprgoject.auth.registration.RegisterActivity
 import com.figueroa.geofinalprgoject.db.FirebaseAuth
 import com.figueroa.geofinalprgoject.db.FirebaseDB
 import com.figueroa.geofinalprgoject.models.Models
-import com.figueroa.geofinalprgoject.user.markers.CreateMarkerActivity
-import com.figueroa.geofinalprgoject.user.markers.GeoMarkerListActivity
-import com.figueroa.geofinalprgoject.user.markers.MarkerDetailsBottomSheet
+import com.figueroa.geofinalprgoject.user.markers.forms.CreateMarkerActivity
+import com.figueroa.geofinalprgoject.user.markers.lists.GeoMarkerListActivity
+import com.figueroa.geofinalprgoject.user.markers.details.MarkerDetailsBottomSheet
+import com.figueroa.geofinalprgoject.user.markers.lists.SavedGeoMarkersActivity
 import com.figueroa.geofinalprgoject.utils.calculateDistance
 import com.figueroa.geofinalprgoject.utils.getBitmapFromVector
 import com.google.android.gms.common.api.ResolvableApiException
@@ -493,9 +494,9 @@ class MapsActivity : AppCompatActivity(),
 
                     // Restarting the activity
                     finish()
-                    overridePendingTransition(0, 0);
+                    overridePendingTransition(0, 0)
                     startActivity(intent)
-                    overridePendingTransition(0, 0);
+                    overridePendingTransition(0, 0)
                 } else
                     Toast.makeText(
                         applicationContext,
@@ -514,7 +515,10 @@ class MapsActivity : AppCompatActivity(),
                 startActivity(intent)
             }
             R.id.drawer_saved_markers -> {
-                // TODO: My saved markers
+                val intent = Intent(applicationContext, SavedGeoMarkersActivity::class.java).apply {
+                    putExtra("userId", userId)
+                }
+                startActivity(intent)
             }
             R.id.drawer_create_place -> {
                 if (this::center.isInitialized) {

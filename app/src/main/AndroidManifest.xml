@@ -16,13 +16,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GeoFinalPrgoject">
+        <activity android:name=".user.markers.lists.SavedGeoMarkersActivity"></activity>
         <activity
-            android:name=".user.markers.CreateMarkerActivity"
+            android:name=".user.markers.forms.CreateMarkerActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".user.markers.GeoMarkerListActivity"
+            android:name=".user.markers.lists.GeoMarkerListActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primaryLightColor"
-    tools:context=".user.markers.CreateMarkerActivity">
+    tools:context=".user.markers.forms.CreateMarkerActivity">
 
     <TextView
         android:id="@+id/form_marker_title"

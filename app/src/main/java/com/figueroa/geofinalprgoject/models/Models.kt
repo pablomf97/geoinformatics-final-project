@@ -33,9 +33,9 @@ class Models {
     data class User(
         var userId: String? = null,
         var userEmail: String? = null,
-        var geoMarkers: List<GeoMarker>? = null,
+        var geoMarkers: List<String>? = null,
     ) {
-        constructor(user: FirebaseUser, geoMarkers: List<GeoMarker>) : this() {
+        constructor(user: FirebaseUser, geoMarkers: List<String>) : this() {
             this.userId = user.uid
             this.userEmail = user.email
             this.geoMarkers = geoMarkers
@@ -44,7 +44,7 @@ class Models {
         constructor(data: Map<String, Any>) : this() {
             this.userId = data["userId"] as String
             this.userEmail = data["userEmail"] as String
-            this.geoMarkers = data["geoMarkers"] as List<GeoMarker>
+            this.geoMarkers = data["geoMarkers"] as List<String>
         }
     }
 }

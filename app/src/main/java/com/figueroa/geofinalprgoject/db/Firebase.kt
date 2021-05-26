@@ -14,23 +14,40 @@ import com.google.firebase.ktx.Firebase
 
 class FirebaseDB {
     private var db: FirebaseFirestore = Firebase.firestore
-    private var tag = "FIRESTORE"
 
-    fun getUserGeoMarkers(
-        userId: String,
+    fun getUserByUid(
+        id: String,
+        onSuccess: (documentId: String, user: Models.User) -> Unit,
+        onFailure: (Exception?) -> Unit
+    ) {
+        db.collection("users").whereEqualTo("userId", id).get()
+            .addOnSuccessListener { snapshots ->
+                when {
+                    snapshots.isEmpty -> onFailure(Exception("User not found"))
+                    !snapshots.isEmpty -> {
+                        val users = snapshots.toObjects(Models.User::class.java)
+                        if (users.size > 1)
+                            onFailure(Exception("Multiple users found"))
+                        else
+                            onSuccess(snapshots.documents[0].id, users[0])
+                    }
+                }
+            }.addOnFailureListener { onFailure(it) }
+    }
+
+    fun getSavedGeoMarkers(
+        ids: List<String>,
         onSuccess: (List<Models.GeoMarker>) -> Unit,
         onFailure: (Exception?) -> Unit
     ) {
-        db.collection("geo-markers").whereEqualTo("uid", userId)
-            .get().addOnSuccessListener { snapshot ->
-                if (snapshot.documents.isNotEmpty()) {
-                    val documents = snapshot.documents
-                    onSuccess(documents as List<Models.GeoMarker>)
-                } else onFailure(java.lang.Exception("More than one user was returned."))
-
-            }.addOnFailureListener {
-                onFailure(java.lang.Exception("More than one user was returned."))
-            }
+        db.collection("geo-markers").whereIn(FieldPath.documentId(), ids).get()
+            .addOnSuccessListener { snapshots ->
+                when {
+                    snapshots.isEmpty -> onSuccess(listOf())
+                    !snapshots.isEmpty -> onSuccess(snapshots.toObjects(Models.GeoMarker::class.java))
+                    else -> onFailure(Exception("Unknown error"))
+                }
+            }.addOnFailureListener { onFailure(it) }
     }
 
     fun addGeoMarkerToUser(
@@ -74,6 +91,23 @@ class FirebaseDB {
         }
     }
 
+    fun removeGeoMarkerFromSaved(
+        userId: String,
+        ids: List<String>,
+        onSuccess: (List<String>) -> Unit,
+        onFailure: (Exception?) -> Unit
+    ) {
+        when {
+            ids.isNotEmpty() -> {
+                db.collection("users")
+                    .document(userId).update("geoMarkers", FieldValue.arrayRemove(*ids.toTypedArray()))
+                    .addOnSuccessListener { onSuccess(ids) }
+                    .addOnFailureListener { onFailure(it) }
+            }
+            else -> onFailure(Exception("Empty ID list"))
+        }
+    }
+
     fun getNearbyMarkers(
         center: LatLng,
         onSuccess: (documents: List<DocumentSnapshot>) -> Unit,
@@ -112,6 +146,11 @@ class FirebaseDB {
 
     fun getUserGeoMarkersQuery(userId: String): Query {
         return db.collection("geo-markers").whereEqualTo("uid", userId)
+            .orderBy("createdOn", Query.Direction.DESCENDING)
+    }
+
+    fun getSavedGeoMarkersQuery(ids: List<String>): Query {
+        return db.collection("geo-markers").whereIn(FieldPath.documentId(), ids)
             .orderBy("createdOn", Query.Direction.DESCENDING)
     }
 
