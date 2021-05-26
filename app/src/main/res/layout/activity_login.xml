@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".auth.login.LoginActivity"
-    >
+    tools:context=".auth.login.LoginActivity">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -27,7 +25,7 @@
         android:layout_margin="16dp"
         android:text="@string/login_to_your_account"
         android:textSize="25sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/form_login_username"
@@ -50,7 +48,7 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:minWidth="88dp"
-            android:minHeight="56dp"/>
+            android:minHeight="56dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,7 +73,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:minWidth="88dp"
-            android:minHeight="56dp"/>
+            android:minHeight="56dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -88,7 +86,7 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="16dp"
         android:enabled="false"
-        android:text="@string/login"/>
+        android:text="@string/login" />
 
     <RelativeLayout
         android:id="@+id/form_login_loading"
@@ -97,6 +95,7 @@
         android:layout_centerInParent="true"
         android:background="#CCFFFFFF"
         android:visibility="gone">
+
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -105,7 +104,7 @@
             android:visibility="visible"
             app:hideAnimationBehavior="inward"
             app:showAnimationBehavior="outward"
-            app:trackCornerRadius="2dp"/>
+            app:trackCornerRadius="2dp" />
     </RelativeLayout>
 
 </RelativeLayout>

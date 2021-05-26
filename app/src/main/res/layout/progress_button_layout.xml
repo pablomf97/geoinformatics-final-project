@@ -25,7 +25,7 @@
             android:visibility="gone"
             app:hideAnimationBehavior="inward"
             app:indicatorColor="@color/white"
-            app:showAnimationBehavior="outward"/>
+            app:showAnimationBehavior="outward" />
 
         <TextView
             android:id="@+id/save_button_text"
@@ -37,7 +37,7 @@
             android:fontFamily="@font/quicksand_bold"
             android:text="@string/save_marker"
             android:textAllCaps="true"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
     </RelativeLayout>
 

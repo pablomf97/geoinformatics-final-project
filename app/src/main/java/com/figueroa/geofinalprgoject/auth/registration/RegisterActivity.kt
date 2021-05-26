@@ -1,10 +1,8 @@
 package com.figueroa.geofinalprgoject.auth.registration
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -20,7 +18,6 @@ import com.figueroa.geofinalprgoject.utils.isValidEmail
 import com.figueroa.geofinalprgoject.utils.isValidPassword
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textfield.TextInputLayout
-import kotlin.properties.Delegates
 import kotlin.properties.Delegates.observable
 
 
@@ -47,7 +44,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     // Showed when the app is sending
     // the request to Firebase
     private lateinit var loadingLayout: RelativeLayout
-    private var isLoading: Boolean by observable(false) {_, _, _ -> showHideLoadScreen() }
+    private var isLoading: Boolean by observable(false) { _, _, _ -> showHideLoadScreen() }
 
     /**
      * Overriding Android's onCreate function
@@ -92,8 +89,10 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                 else {
                     formEmailLayout.error = null
                     formEmailLayout.helperText = "Valid email!"
-                    formEmailLayout.setHelperTextColor(AppCompatResources
-                        .getColorStateList(applicationContext, R.color.green))
+                    formEmailLayout.setHelperTextColor(
+                        AppCompatResources
+                            .getColorStateList(applicationContext, R.color.green)
+                    )
                     formEmailLayout.boxStrokeColor = ContextCompat
                         .getColor(applicationContext, R.color.green)
                 }
@@ -139,8 +138,10 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                 else {
                     formPasswordLayout.error = null
                     formPasswordLayout.helperText = "Valid password!"
-                    formPasswordLayout.setHelperTextColor(AppCompatResources
-                        .getColorStateList(applicationContext, R.color.green))
+                    formPasswordLayout.setHelperTextColor(
+                        AppCompatResources
+                            .getColorStateList(applicationContext, R.color.green)
+                    )
                     formPasswordLayout.boxStrokeColor = ContextCompat
                         .getColor(applicationContext, R.color.green)
                 }
@@ -165,13 +166,27 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
      */
     private fun decidePassText(strength: Int): String {
         return when (strength) {
-            0 -> { "Extremely weak password" }
-            1 -> { "Weak password" }
-            2 -> { "Less weak password" }
-            3 -> { "Average password" }
-            4 -> { "Secure password" }
-            5 -> { "Really secure password" }
-            else -> { "" }
+            0 -> {
+                "Extremely weak password"
+            }
+            1 -> {
+                "Weak password"
+            }
+            2 -> {
+                "Less weak password"
+            }
+            3 -> {
+                "Average password"
+            }
+            4 -> {
+                "Secure password"
+            }
+            5 -> {
+                "Really secure password"
+            }
+            else -> {
+                ""
+            }
         }
     }
 
@@ -181,13 +196,27 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
      */
     private fun decideBarColor(strength: Int): Int {
         return when (strength) {
-            0 -> { ContextCompat.getColor(applicationContext, R.color.primaryColor) }
-            1 -> { ContextCompat.getColor(applicationContext, R.color.red) }
-            2 -> { ContextCompat.getColor(applicationContext, R.color.orange) }
-            3 -> { ContextCompat.getColor(applicationContext, R.color.yellow) }
-            4 -> { ContextCompat.getColor(applicationContext, R.color.green) }
-            5 -> { ContextCompat.getColor(applicationContext, R.color.blue) }
-            else -> { ContextCompat.getColor(applicationContext, R.color.primaryColor) }
+            0 -> {
+                ContextCompat.getColor(applicationContext, R.color.primaryColor)
+            }
+            1 -> {
+                ContextCompat.getColor(applicationContext, R.color.red)
+            }
+            2 -> {
+                ContextCompat.getColor(applicationContext, R.color.orange)
+            }
+            3 -> {
+                ContextCompat.getColor(applicationContext, R.color.yellow)
+            }
+            4 -> {
+                ContextCompat.getColor(applicationContext, R.color.green)
+            }
+            5 -> {
+                ContextCompat.getColor(applicationContext, R.color.blue)
+            }
+            else -> {
+                ContextCompat.getColor(applicationContext, R.color.primaryColor)
+            }
         }
     }
 
@@ -206,8 +235,10 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
              */
             hideKeyboard(this)
 
-            window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            )
             formSubmitButton.isEnabled = false
             isLoading = true
 
@@ -225,9 +256,11 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                  * case, show a toast and finish the activity.
                  */
                 onSuccess = {
-                    Toast.makeText(applicationContext,
+                    Toast.makeText(
+                        applicationContext,
                         "Successfully created account!",
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                     this.finish()
                 },
@@ -248,8 +281,10 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                             makeToast("Woah there! Your password is too weak...")
                         }
                         else -> {
-                            makeToast("Oops! Something went wrong... " +
-                                "Please try again later.")
+                            makeToast(
+                                "Oops! Something went wrong... " +
+                                        "Please try again later."
+                            )
                         }
                     }
 
@@ -268,9 +303,11 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
      * Shows a simple toast.
      */
     private fun makeToast(message: String) {
-        Toast.makeText(applicationContext,
+        Toast.makeText(
+            applicationContext,
             message,
-            Toast.LENGTH_SHORT).show()
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     /**

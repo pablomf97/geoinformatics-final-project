@@ -23,8 +23,8 @@ import com.figueroa.geofinalprgoject.auth.registration.RegisterActivity
 import com.figueroa.geofinalprgoject.db.FirebaseAuth
 import com.figueroa.geofinalprgoject.db.FirebaseDB
 import com.figueroa.geofinalprgoject.models.Models
-import com.figueroa.geofinalprgoject.user.markers.GeoMarkerListActivity
 import com.figueroa.geofinalprgoject.user.markers.CreateMarkerActivity
+import com.figueroa.geofinalprgoject.user.markers.GeoMarkerListActivity
 import com.figueroa.geofinalprgoject.user.markers.MarkerDetailsBottomSheet
 import com.figueroa.geofinalprgoject.utils.calculateDistance
 import com.figueroa.geofinalprgoject.utils.getBitmapFromVector
@@ -38,14 +38,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import java.util.*
-import kotlin.collections.HashMap
 
 
 class MapsActivity : AppCompatActivity(),
     OnMapReadyCallback,
     NavigationView.OnNavigationItemSelectedListener,
-    GoogleMap.OnMarkerClickListener
-{
+    GoogleMap.OnMarkerClickListener {
 
     // Firebase Auth
     private lateinit var auth: FirebaseAuth
@@ -115,7 +113,7 @@ class MapsActivity : AppCompatActivity(),
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
-                .findFragmentById(R.id.map) as SupportMapFragment
+            .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
 
@@ -148,6 +146,7 @@ class MapsActivity : AppCompatActivity(),
             markerHash.clear()
         }
     }
+
     /**
      * Checks that all permissions were granted
      * and ask for them in case they were not.
@@ -168,7 +167,7 @@ class MapsActivity : AppCompatActivity(),
 
                 // Adding a listener to the FAB and enabling it
                 fab.setOnClickListener {
-                    when(drawer.isDrawerOpen(GravityCompat.END)) {
+                    when (drawer.isDrawerOpen(GravityCompat.END)) {
                         true -> drawer.closeDrawer(GravityCompat.END, true)
                         false -> drawer.openDrawer(GravityCompat.END, true)
                     }
@@ -347,14 +346,17 @@ class MapsActivity : AppCompatActivity(),
             db.getNearbyMarkers(center,
                 onSuccess = { documents ->
                     if (documents.isEmpty())
-                        Toast.makeText(applicationContext, "There were no " +
-                                "geomarkers close by!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            applicationContext, "There were no " +
+                                    "geomarkers close by!", Toast.LENGTH_SHORT
+                        ).show()
                     else {
                         for (doc in documents) {
                             val markerId = doc.id
-                            val marker = Models.GeoMarker(doc.data?: mapOf())
+                            val marker = Models.GeoMarker(doc.data ?: mapOf())
 
-                            val markerLocation = LatLng(marker.latLng!!.latitude, marker.latLng!!.longitude)
+                            val markerLocation =
+                                LatLng(marker.latLng!!.latitude, marker.latLng!!.longitude)
                             val distanceToMarker = calculateDistance(center, markerLocation)
 
                             if (distanceToMarker > 200) {
@@ -363,23 +365,33 @@ class MapsActivity : AppCompatActivity(),
                                     markerHash.remove(markerId)
                                 }
                             } else {
-                                if (!markerHash.contains(markerId)){
+                                if (!markerHash.contains(markerId)) {
                                     val isOutdated = (marker.type == "WARNING"
                                             && marker.createdOn?.toDate()?.time?.plus(7200000)!!
                                             < Date().time)
                                     if (!isOutdated) {
                                         val mapMarkerOptions = MarkerOptions()
                                         mapMarkerOptions.position(
-                                            LatLng(marker.latLng!!.latitude,
-                                                marker.latLng!!.longitude)
+                                            LatLng(
+                                                marker.latLng!!.latitude,
+                                                marker.latLng!!.longitude
+                                            )
                                         )
                                         mapMarkerOptions.title(marker.title)
                                         if (marker.type!!.equals("warning", ignoreCase = true))
                                             mapMarkerOptions.icon(
-                                                getBitmapFromVector(applicationContext, R.drawable.ic_warning))
+                                                getBitmapFromVector(
+                                                    applicationContext,
+                                                    R.drawable.ic_warning
+                                                )
+                                            )
                                         else
                                             mapMarkerOptions.icon(
-                                                getBitmapFromVector(applicationContext, R.drawable.ic_interest))
+                                                getBitmapFromVector(
+                                                    applicationContext,
+                                                    R.drawable.ic_interest
+                                                )
+                                            )
 
 
                                         val mapMarker = map.addMarker(mapMarkerOptions)
@@ -392,8 +404,10 @@ class MapsActivity : AppCompatActivity(),
                     }
                 },
                 onFailure = {
-                    Toast.makeText(applicationContext, "Could not get nearby markers",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext, "Could not get nearby markers",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     Log.w("GEO_QUERY_ERROR", it?.message ?: "ERROR")
                 })
         }
@@ -471,9 +485,11 @@ class MapsActivity : AppCompatActivity(),
             R.id.drawer_logout -> {
                 auth.logout()
                 if (auth.currentUser() == null) {
-                    Toast.makeText(applicationContext,
+                    Toast.makeText(
+                        applicationContext,
                         "Logged out!",
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                     // Restarting the activity
                     finish()
@@ -481,9 +497,11 @@ class MapsActivity : AppCompatActivity(),
                     startActivity(intent)
                     overridePendingTransition(0, 0);
                 } else
-                    Toast.makeText(applicationContext,
+                    Toast.makeText(
+                        applicationContext,
                         "Sorry, could not perform logout...",
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
             }
             R.id.drawer_register -> {
                 val intent = Intent(applicationContext, RegisterActivity::class.java)
@@ -508,9 +526,11 @@ class MapsActivity : AppCompatActivity(),
                         }
                     startActivity(intent)
                 } else
-                    Toast.makeText(applicationContext,
+                    Toast.makeText(
+                        applicationContext,
                         "Location is not yet accessible!",
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
             }
         }
 

@@ -12,14 +12,14 @@ class Models {
      */
     @IgnoreExtraProperties
     data class GeoMarker(
-            var uid: String? = null,
-            var title: String? = null,
-            var description: String? = null,
-            var latLng: GeoPoint? = null,
-            var type: String? = null,
-            var createdOn: Timestamp? = null
-            ) {
-        constructor(data: Map<String, Any>): this() {
+        var uid: String? = null,
+        var title: String? = null,
+        var description: String? = null,
+        var latLng: GeoPoint? = null,
+        var type: String? = null,
+        var createdOn: Timestamp? = null
+    ) {
+        constructor(data: Map<String, Any>) : this() {
             this.uid = data["uid"] as String
             this.title = data["title"] as String
             this.description = data["description"] as String
@@ -31,16 +31,17 @@ class Models {
     }
 
     data class User(
-            var userId: String? = null,
-            var userEmail: String? = null,
-            var geoMarkers: List<GeoMarker>? = null,
-            ) {
-        constructor(user: FirebaseUser, geoMarkers: List<GeoMarker>): this() {
+        var userId: String? = null,
+        var userEmail: String? = null,
+        var geoMarkers: List<GeoMarker>? = null,
+    ) {
+        constructor(user: FirebaseUser, geoMarkers: List<GeoMarker>) : this() {
             this.userId = user.uid
             this.userEmail = user.email
             this.geoMarkers = geoMarkers
         }
-        constructor(data: Map<String, Any>): this() {
+
+        constructor(data: Map<String, Any>) : this() {
             this.userId = data["userId"] as String
             this.userEmail = data["userEmail"] as String
             this.geoMarkers = data["geoMarkers"] as List<GeoMarker>

@@ -17,10 +17,6 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import java.util.regex.Pattern
-import kotlin.math.asin
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
 
 fun isValidEmail(email: String): Boolean {
     return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()

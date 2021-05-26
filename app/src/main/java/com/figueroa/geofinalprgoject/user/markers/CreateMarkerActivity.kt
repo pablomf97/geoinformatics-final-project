@@ -1,19 +1,17 @@
 package com.figueroa.geofinalprgoject.user.markers
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.*
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import com.figueroa.geofinalprgoject.R
 import com.figueroa.geofinalprgoject.db.FirebaseDB
 import com.figueroa.geofinalprgoject.models.Models
 import com.figueroa.geofinalprgoject.utils.hideKeyboard
-import com.figueroa.geofinalprgoject.utils.isValidEmail
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.GeoPoint
@@ -33,9 +31,9 @@ class CreateMarkerActivity : AppCompatActivity(), View.OnClickListener {
 
     // Checking if the form is ready to commit
     // everytime these values change
-    private var isTypeReady: Boolean by observable(false) { _,_,_ -> checkForm() }
-    private var isNameReady: Boolean by observable(false) { _,_,_ -> checkForm() }
-    private var isDescriptionReady: Boolean by observable(false) { _,_,_ -> checkForm() }
+    private var isTypeReady: Boolean by observable(false) { _, _, _ -> checkForm() }
+    private var isNameReady: Boolean by observable(false) { _, _, _ -> checkForm() }
+    private var isDescriptionReady: Boolean by observable(false) { _, _, _ -> checkForm() }
 
     // Submit button
     private lateinit var formSubmitButton: Button
@@ -57,7 +55,7 @@ class CreateMarkerActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_create_marker)
         supportActionBar?.hide()
 
-        userId = intent.getStringExtra("userId")?: ""
+        userId = intent.getStringExtra("userId") ?: ""
 
         // -32.3291159,-58.0608368 -> Middle of the ocean
         val lat = intent.getDoubleExtra("lat", -32.3291159)
@@ -66,8 +64,10 @@ class CreateMarkerActivity : AppCompatActivity(), View.OnClickListener {
         Log.w("CREATE", lat.toString() + lng.toString())
         latLng = GeoPoint(lat, lng)
         if (userId.isBlank() || latLng == GeoPoint(-32.3291159, -58.0608368)) {
-            Toast.makeText(applicationContext,
-                "Oops! Something went wrong...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                applicationContext,
+                "Oops! Something went wrong...", Toast.LENGTH_SHORT
+            ).show()
             this.finish()
         }
 
@@ -82,7 +82,7 @@ class CreateMarkerActivity : AppCompatActivity(), View.OnClickListener {
         val autoComplete = formTypeLayout.editText as? AutoCompleteTextView
         autoComplete?.setAdapter(adapter)
         autoComplete?.setOnItemClickListener { _, _, _, _ -> isTypeReady = true }
-        
+
         formNameLayout = findViewById(R.id.form_marker_name)
         formNameLayout.editText?.addTextChangedListener(
             onTextChanged = { text, _, _, _ ->
@@ -155,7 +155,8 @@ class CreateMarkerActivity : AppCompatActivity(), View.OnClickListener {
 
             window.setFlags(
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            )
             formNameLayout.isEnabled = false
             formDescriptionLayout.isEnabled = false
             formSubmitButton.isEnabled = false
@@ -177,15 +178,19 @@ class CreateMarkerActivity : AppCompatActivity(), View.OnClickListener {
             db.createGeoMarker(
                 geoMarker = marker,
                 onSuccess = {
-                    Toast.makeText(applicationContext,
+                    Toast.makeText(
+                        applicationContext,
                         "Successfully created marker!",
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
                     this.finish()
                 },
                 onFailure = {
-                    Toast.makeText(applicationContext,
+                    Toast.makeText(
+                        applicationContext,
                         "Oops! Something went wrong while trying to create the marker...",
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
                     /**
                      * We enable the touchscreen again.
                      */

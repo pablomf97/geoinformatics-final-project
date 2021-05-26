@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/markers_list_recycler_view_item"
     android:layout_width="match_parent"
@@ -45,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/quicksand_bold"
-                android:text="@string/marker_name"/>
+                android:text="@string/marker_name" />
 
             <TextView
                 android:id="@+id/list_item_description"
@@ -55,7 +54,7 @@
                 android:ellipsize="end"
                 android:fontFamily="@font/quicksand_regular"
                 android:maxLines="2"
-                android:text="@string/marker_description"/>
+                android:text="@string/marker_description" />
 
         </LinearLayout>
 

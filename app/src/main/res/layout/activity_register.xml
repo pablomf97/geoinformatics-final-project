@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".auth.registration.RegisterActivity" >
+    tools:context=".auth.registration.RegisterActivity">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -26,7 +25,7 @@
         android:layout_margin="16dp"
         android:text="@string/create_account"
         android:textSize="25sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/form_register_username"
@@ -51,7 +50,7 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:minWidth="88dp"
-            android:minHeight="56dp"/>
+            android:minHeight="56dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -79,7 +78,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:minWidth="88dp"
-            android:minHeight="56dp"/>
+            android:minHeight="56dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -91,7 +90,7 @@
         android:layout_marginHorizontal="16dp"
         android:visibility="gone"
         app:showAnimationBehavior="inward"
-        app:trackCornerRadius="5dp"/>
+        app:trackCornerRadius="5dp" />
 
     <TextView
         android:id="@+id/form_register_strength_indicator"
@@ -100,7 +99,7 @@
         android:layout_below="@id/form_register_progress_bar"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="4dp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/form_register_submit"
@@ -120,6 +119,7 @@
         android:layout_centerInParent="true"
         android:background="#CCFFFFFF"
         android:visibility="gone">
+
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -128,7 +128,7 @@
             android:visibility="visible"
             app:hideAnimationBehavior="inward"
             app:showAnimationBehavior="outward"
-            app:trackCornerRadius="2dp"/>
+            app:trackCornerRadius="2dp" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -5,8 +5,7 @@
 
     <item android:title="@string/account">
         <menu>
-            <group
-                android:checkableBehavior="single">
+            <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/drawer_login"
                     android:icon="@drawable/ic_login"
@@ -31,7 +30,7 @@
                 <item
                     android:id="@+id/drawer_saved_markers"
                     android:icon="@drawable/ic_favorite"
-                    android:title="@string/saved_markers"/>
+                    android:title="@string/saved_markers" />
 
                 <item
                     android:id="@+id/drawer_my_places"

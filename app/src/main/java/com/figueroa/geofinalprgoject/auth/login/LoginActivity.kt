@@ -27,8 +27,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     // Checking if the form is ready to commit
     // everytime these values change
-    private var isEmailReady: Boolean by observable(false) {_,_,_ -> checkForm()}
-    private var isPassReady: Boolean by observable(false) {_,_,_ -> checkForm()}
+    private var isEmailReady: Boolean by observable(false) { _, _, _ -> checkForm() }
+    private var isPassReady: Boolean by observable(false) { _, _, _ -> checkForm() }
 
     // Submit button
     private lateinit var formSubmitButton: Button
@@ -100,8 +100,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 else {
                     formPasswordLayout.error = null
                     formPasswordLayout.helperText = "Valid password!"
-                    formPasswordLayout.setHelperTextColor(AppCompatResources
-                        .getColorStateList(applicationContext, R.color.green))
+                    formPasswordLayout.setHelperTextColor(
+                        AppCompatResources
+                            .getColorStateList(applicationContext, R.color.green)
+                    )
                     formPasswordLayout.boxStrokeColor = ContextCompat
                         .getColor(applicationContext, R.color.green)
                 }
@@ -125,7 +127,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             window.setFlags(
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            )
             formSubmitButton.isEnabled = false
             isLoading = true
 
@@ -140,15 +143,19 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                  * case, show a toast and finish the activity.
                  */
                 onSuccess = {
-                    Toast.makeText(applicationContext,
+                    Toast.makeText(
+                        applicationContext,
                         "Successfully logged in!",
-                        Toast.LENGTH_SHORT).show()
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                     this.finish()
                 },
                 onFailure = {
-                    makeToast("Oops! Something went wrong... " +
-                            "Please try again later.")
+                    makeToast(
+                        "Oops! Something went wrong... " +
+                                "Please try again later."
+                    )
 
                     /**
                      * We enable the touchscreen again.
@@ -165,9 +172,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
      * Shows a simple toast.
      */
     private fun makeToast(message: String) {
-        Toast.makeText(applicationContext,
+        Toast.makeText(
+            applicationContext,
             message,
-            Toast.LENGTH_SHORT).show()
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     /**

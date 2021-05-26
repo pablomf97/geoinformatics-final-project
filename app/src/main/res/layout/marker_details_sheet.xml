@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp">
@@ -13,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="@color/primaryLightColor"/>
+        app:cardBackgroundColor="@color/primaryLightColor" />
 
     <TextView
         android:id="@+id/bottom_sheet_title"
@@ -23,7 +22,7 @@
         android:layout_below="@id/adorno"
         android:layout_alignParentStart="true"
         android:fontFamily="@font/quicksand_semibold"
-        android:text="@string/marker_name"/>
+        android:text="@string/marker_name" />
 
     <TextView
         android:id="@+id/bottom_sheet_latlng"
@@ -32,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/bottom_sheet_title"
         android:fontFamily="@font/quicksand_medium"
-        android:text="@string/latitude_longitude"/>
+        android:text="@string/latitude_longitude" />
 
     <TextView
         android:id="@+id/bottom_sheet_description"
@@ -43,7 +42,7 @@
         android:layout_alignParentStart="true"
         android:fontFamily="@font/quicksand_medium"
         android:text="@string/marker_description"
-        android:textAlignment="textStart"/>
+        android:textAlignment="textStart" />
 
     <ImageView
         android:id="@+id/bottom_sheet_type_image"
@@ -70,16 +69,16 @@
         android:gravity="center_vertical"
         android:minHeight="36dp"
         android:text="@string/marker_type"
-        android:textAllCaps="true"/>
+        android:textAllCaps="true" />
 
     <include
         android:id="@+id/bottom_sheet_save_button"
+        layout="@layout/progress_button_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/bottom_sheet_type_text"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp"
-        android:visibility="gone"
-        layout="@layout/progress_button_layout"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

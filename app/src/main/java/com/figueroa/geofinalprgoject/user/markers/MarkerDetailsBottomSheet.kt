@@ -16,10 +16,11 @@ import com.figueroa.geofinalprgoject.models.Models
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
-class MarkerDetailsBottomSheet(private val marker: Models.GeoMarker,
-                               private val markerId: String? = null,
-                               private val userId: String? = null
-                               ): BottomSheetDialogFragment() {
+class MarkerDetailsBottomSheet(
+    private val marker: Models.GeoMarker,
+    private val markerId: String? = null,
+    private val userId: String? = null
+) : BottomSheetDialogFragment() {
 
     private lateinit var titleTextView: TextView
     private lateinit var descriptionTextView: TextView
@@ -59,7 +60,8 @@ class MarkerDetailsBottomSheet(private val marker: Models.GeoMarker,
             saveButton = view.findViewById(R.id.bottom_sheet_save_button) as CardView
             saveButton.visibility = View.VISIBLE
             saveButton.setOnClickListener {
-                val loadingProgressBar = saveButton.findViewById<CircularProgressIndicator>(R.id.save_button_progress)
+                val loadingProgressBar =
+                    saveButton.findViewById<CircularProgressIndicator>(R.id.save_button_progress)
                 loadingProgressBar.visibility = View.VISIBLE
 
                 val textView = saveButton.findViewById<TextView>(R.id.save_button_text)
@@ -69,19 +71,24 @@ class MarkerDetailsBottomSheet(private val marker: Models.GeoMarker,
                     userId = userId!!,
                     markerId = markerId!!,
                     onSuccess = {
-                        Toast.makeText(view.context, "Marker saved!",
-                            Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            view.context, "Marker saved!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         loadingProgressBar.visibility = View.GONE
                         textView.text = "Saved"
                         textView.setTextColor(getColor(resources, R.color.primaryColor, null))
 
                         saveButton.setCardBackgroundColor(
-                            getColor(resources, R.color.primaryLightColor, null))
+                            getColor(resources, R.color.primaryLightColor, null)
+                        )
                         saveButton.isEnabled = false
                     },
                     onFailure = {
-                        Toast.makeText(view.context, it?.message ?: "Error",
-                            Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            view.context, it?.message ?: "Error",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 )
             }
