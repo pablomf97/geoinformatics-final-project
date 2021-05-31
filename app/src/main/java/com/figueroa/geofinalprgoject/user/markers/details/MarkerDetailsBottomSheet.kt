@@ -16,12 +16,14 @@ import com.figueroa.geofinalprgoject.models.Models
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
+// This is the detailed view of a geomarker
 class MarkerDetailsBottomSheet(
     private val marker: Models.GeoMarker,
     private val markerId: String? = null,
     private val userId: String? = null
 ) : BottomSheetDialogFragment() {
 
+    // Views
     private lateinit var titleTextView: TextView
     private lateinit var descriptionTextView: TextView
     private lateinit var latLngTextView: TextView
@@ -37,6 +39,7 @@ class MarkerDetailsBottomSheet(
     ): View? {
         val view = inflater.inflate(R.layout.marker_details_sheet, container, false)
 
+        // Finding and assigning views
         titleTextView = view.findViewById(R.id.bottom_sheet_title)
         titleTextView.text = marker.title
 
@@ -54,6 +57,8 @@ class MarkerDetailsBottomSheet(
         typeTextView = view.findViewById(R.id.bottom_sheet_type_text)
         typeTextView.text = marker.type
 
+        // If the user is logged in, the marker is not already on its list
+        // and the type is not warning, show the button to add the marker to its saved markers.
         val shouldShow = (userId != null && markerId != null && marker.uid != userId)
                 && marker.type.equals("interest point", true)
         if (shouldShow) {

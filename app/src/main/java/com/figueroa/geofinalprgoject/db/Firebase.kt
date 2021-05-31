@@ -13,8 +13,19 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class FirebaseDB {
+
+    /**
+     * Access to the cloud DB.
+     */
     private var db: FirebaseFirestore = Firebase.firestore
 
+    /**
+     * Gets the user by its unique identifier.
+     *
+     * @param   id          The id of the user to retrieve
+     * @param   onSuccess   Executes the provided function when the operation completed successfully
+     * @param   onFailure   Executes the provided function when the operation did no complete successfully
+     */
     fun getUserByUid(
         id: String,
         onSuccess: (documentId: String, user: Models.User) -> Unit,
@@ -35,21 +46,14 @@ class FirebaseDB {
             }.addOnFailureListener { onFailure(it) }
     }
 
-    fun getSavedGeoMarkers(
-        ids: List<String>,
-        onSuccess: (List<Models.GeoMarker>) -> Unit,
-        onFailure: (Exception?) -> Unit
-    ) {
-        db.collection("geo-markers").whereIn(FieldPath.documentId(), ids).get()
-            .addOnSuccessListener { snapshots ->
-                when {
-                    snapshots.isEmpty -> onSuccess(listOf())
-                    !snapshots.isEmpty -> onSuccess(snapshots.toObjects(Models.GeoMarker::class.java))
-                    else -> onFailure(Exception("Unknown error"))
-                }
-            }.addOnFailureListener { onFailure(it) }
-    }
-
+    /**
+     * Adds a geomarker to the user's saved geomarkers.
+     *
+     * @param   userId      The id of the user
+     * @param   markerId    The id of the marker to add
+     * @param   onSuccess   Executes the provided function when the operation completed successfully
+     * @param   onFailure   Executes the provided function when the operation did no complete successfully
+     */
     fun addGeoMarkerToUser(
         userId: String, markerId: String,
         onSuccess: () -> Unit,
@@ -65,6 +69,39 @@ class FirebaseDB {
             }.addOnFailureListener { onFailure(it) }
     }
 
+    /**
+     * Removes a geomarker to the user's saved geomarkers.
+     *
+     * @param   userId      The id of the user
+     * @param   ids         The id(s) of the marker(s) to remove
+     * @param   onSuccess   Executes the provided function when the operation completed successfully
+     * @param   onFailure   Executes the provided function when the operation did no complete successfully
+     */
+    fun removeGeoMarkerFromSaved(
+        userId: String,
+        ids: List<String>,
+        onSuccess: (List<String>) -> Unit,
+        onFailure: (Exception?) -> Unit
+    ) {
+        when {
+            ids.isNotEmpty() -> {
+                db.collection("users")
+                    .document(userId)
+                    .update("geoMarkers", FieldValue.arrayRemove(*ids.toTypedArray()))
+                    .addOnSuccessListener { onSuccess(ids) }
+                    .addOnFailureListener { onFailure(it) }
+            }
+            else -> onFailure(Exception("Empty ID list"))
+        }
+    }
+
+    /**
+     * Gets the user by its unique identifier.
+     *
+     * @param   ids         The id(s) of the geomarker(s) to delete
+     * @param   onSuccess   Executes the provided function when the operation completed successfully
+     * @param   onFailure   Executes the provided function when the operation did no complete successfully
+     */
     fun deleteGeoMarker(
         ids: List<String>, onSuccess: (List<String>) -> Unit,
         onFailure: (Exception?) -> Unit
@@ -91,23 +128,13 @@ class FirebaseDB {
         }
     }
 
-    fun removeGeoMarkerFromSaved(
-        userId: String,
-        ids: List<String>,
-        onSuccess: (List<String>) -> Unit,
-        onFailure: (Exception?) -> Unit
-    ) {
-        when {
-            ids.isNotEmpty() -> {
-                db.collection("users")
-                    .document(userId).update("geoMarkers", FieldValue.arrayRemove(*ids.toTypedArray()))
-                    .addOnSuccessListener { onSuccess(ids) }
-                    .addOnFailureListener { onFailure(it) }
-            }
-            else -> onFailure(Exception("Empty ID list"))
-        }
-    }
-
+    /**
+     * Gets the nearby geomarker from a provided center.
+     *
+     * @param   center      The coordinates from which to make the calculations
+     * @param   onSuccess   Executes the provided function when the operation completed successfully
+     * @param   onFailure   Executes the provided function when the operation did no complete successfully
+     */
     fun getNearbyMarkers(
         center: LatLng,
         onSuccess: (documents: List<DocumentSnapshot>) -> Unit,
@@ -144,11 +171,23 @@ class FirebaseDB {
         }
     }
 
+    /**
+     * Builds the query that retrieves the geomarkers of an specified user.
+     *
+     * @param   userId  The id of the user
+     * @return  The query
+     */
     fun getUserGeoMarkersQuery(userId: String): Query {
         return db.collection("geo-markers").whereEqualTo("uid", userId)
             .orderBy("createdOn", Query.Direction.DESCENDING)
     }
 
+    /**
+     * Builds the query that retrieves the saved geomarkers of an specified user.
+     *
+     * @param   ids  The ids of geomarkers to retrieve
+     * @return  The query
+     */
     fun getSavedGeoMarkersQuery(ids: List<String>): Query {
         return db.collection("geo-markers").whereIn(FieldPath.documentId(), ids)
             .orderBy("createdOn", Query.Direction.DESCENDING)

@@ -10,6 +10,7 @@ import com.figueroa.geofinalprgoject.models.Models
 import com.figueroa.geofinalprgoject.user.markers.details.MarkerDetailsBottomSheet
 import com.google.android.material.card.MaterialCardView
 
+// This is the view holder for the recycler view
 class GeoMarkerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val card: MaterialCardView = view.findViewById(R.id.markers_list_recycler_view_item)
     private val markerType: ImageView = view.findViewById(R.id.list_item_marker_type)

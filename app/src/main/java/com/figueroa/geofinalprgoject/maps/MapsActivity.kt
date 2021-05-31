@@ -7,7 +7,6 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
@@ -23,9 +22,9 @@ import com.figueroa.geofinalprgoject.auth.registration.RegisterActivity
 import com.figueroa.geofinalprgoject.db.FirebaseAuth
 import com.figueroa.geofinalprgoject.db.FirebaseDB
 import com.figueroa.geofinalprgoject.models.Models
+import com.figueroa.geofinalprgoject.user.markers.details.MarkerDetailsBottomSheet
 import com.figueroa.geofinalprgoject.user.markers.forms.CreateMarkerActivity
 import com.figueroa.geofinalprgoject.user.markers.lists.GeoMarkerListActivity
-import com.figueroa.geofinalprgoject.user.markers.details.MarkerDetailsBottomSheet
 import com.figueroa.geofinalprgoject.user.markers.lists.SavedGeoMarkersActivity
 import com.figueroa.geofinalprgoject.utils.calculateDistance
 import com.figueroa.geofinalprgoject.utils.getBitmapFromVector
@@ -62,7 +61,6 @@ class MapsActivity : AppCompatActivity(),
 
     // To handle permissions
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
-    private val tag: String = MapsActivity::class.java.simpleName
     private lateinit var grantPermissions: MaterialButton
 
     // Location
@@ -82,10 +80,9 @@ class MapsActivity : AppCompatActivity(),
         override fun onLocationResult(locationResult: LocationResult?) {
             locationResult ?: return
             for (location in locationResult.locations) {
-                Log.d(tag, location.toString())
-
                 if (!map.isMyLocationEnabled) map.isMyLocationEnabled = true
 
+                // Setting the center of the map and animating the map
                 center = LatLng(location.latitude, location.longitude)
                 val cameraPosition = CameraPosition.Builder().target(center).zoom(17f).build()
                 val cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition)
@@ -315,8 +312,7 @@ class MapsActivity : AppCompatActivity(),
     /**
      * Shows a simple snackbar
      *
-     * @
-     * @param message   Message to show in the snackbar
+     * @param   message   Message to show in the snackbar
      */
     private fun showSnackbar(message: String) {
         Snackbar.make(
@@ -341,8 +337,8 @@ class MapsActivity : AppCompatActivity(),
         map.setOnMarkerClickListener(this)
         map.clear()
 
+        // When the camera moves, update the markers nearby
         map.setOnCameraMoveStartedListener {
-            // TODO: Get the geomarkers
             if (!this::db.isInitialized) db = FirebaseDB()
             db.getNearbyMarkers(center,
                 onSuccess = { documents ->
@@ -353,6 +349,7 @@ class MapsActivity : AppCompatActivity(),
                         ).show()
                     else {
                         for (doc in documents) {
+                            // Gets the data and transforms it into our model object
                             val markerId = doc.id
                             val marker = Models.GeoMarker(doc.data ?: mapOf())
 
@@ -360,17 +357,23 @@ class MapsActivity : AppCompatActivity(),
                                 LatLng(marker.latLng!!.latitude, marker.latLng!!.longitude)
                             val distanceToMarker = calculateDistance(center, markerLocation)
 
+                            // Checks that the distance is less than 200 meters
                             if (distanceToMarker > 200) {
                                 if (markerHash.contains(markerId)) {
                                     markerHash[markerId]?.first?.remove()
                                     markerHash.remove(markerId)
                                 }
                             } else {
+                                // Checks that our list of displayed markers
+                                // is not already showing the marker
                                 if (!markerHash.contains(markerId)) {
+                                    // Checks that, if the marker the marker
+                                    // type is WARNING, it is not outdated
                                     val isOutdated = (marker.type == "WARNING"
                                             && marker.createdOn?.toDate()?.time?.plus(7200000)!!
                                             < Date().time)
                                     if (!isOutdated) {
+                                        // Show the marker on the map
                                         val mapMarkerOptions = MarkerOptions()
                                         mapMarkerOptions.position(
                                             LatLng(
@@ -409,10 +412,10 @@ class MapsActivity : AppCompatActivity(),
                         applicationContext, "Could not get nearby markers",
                         Toast.LENGTH_SHORT
                     ).show()
-                    Log.w("GEO_QUERY_ERROR", it?.message ?: "ERROR")
                 })
         }
 
+        // Disabling map gestures
         val uiSettings = map.uiSettings
 
         uiSettings.isRotateGesturesEnabled = true
@@ -476,13 +479,19 @@ class MapsActivity : AppCompatActivity(),
         }
     }
 
+    /**
+     * Overriding Android's onNavigationItemSelected.
+     */
     @SuppressLint("MissingPermission")
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            // Login function
             R.id.drawer_login -> {
                 val intent = Intent(applicationContext, LoginActivity::class.java)
                 startActivity(intent)
+                return true
             }
+            // Logout function
             R.id.drawer_logout -> {
                 auth.logout()
                 if (auth.currentUser() == null) {
@@ -503,23 +512,31 @@ class MapsActivity : AppCompatActivity(),
                         "Sorry, could not perform logout...",
                         Toast.LENGTH_SHORT
                     ).show()
+                return true
             }
+            // Register function
             R.id.drawer_register -> {
                 val intent = Intent(applicationContext, RegisterActivity::class.java)
                 startActivity(intent)
+                return true
             }
+            // My created markers function
             R.id.drawer_my_places -> {
                 val intent = Intent(applicationContext, GeoMarkerListActivity::class.java).apply {
                     putExtra("userId", userId)
                 }
                 startActivity(intent)
+                return true
             }
+            // My saved markers function
             R.id.drawer_saved_markers -> {
                 val intent = Intent(applicationContext, SavedGeoMarkersActivity::class.java).apply {
                     putExtra("userId", userId)
                 }
                 startActivity(intent)
+                return true
             }
+            // Create marker function
             R.id.drawer_create_place -> {
                 if (this::center.isInitialized) {
                     val intent =
@@ -535,12 +552,16 @@ class MapsActivity : AppCompatActivity(),
                         "Location is not yet accessible!",
                         Toast.LENGTH_SHORT
                     ).show()
+                return true
             }
         }
 
         return false
     }
 
+    /**
+     * Overriding Android's onMarkerClick
+     */
     override fun onMarkerClick(marker: Marker): Boolean {
         var markerToShow: Models.GeoMarker? = null
         var markerId = ""
@@ -551,6 +572,8 @@ class MapsActivity : AppCompatActivity(),
                 return@forEach
             }
         }
+
+        // If the marker exists in the list, show it.
         if (markerToShow != null) {
             marker.hideInfoWindow()
             if (this::userId.isInitialized)

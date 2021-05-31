@@ -18,12 +18,34 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import java.util.regex.Pattern
 
+/**
+ * Checks that the provided string is a valid email.
+ *
+ * @param   email   The email to check.
+ * @return  A boolean that will be set to true if the email is valid. False otherwise.
+ */
 fun isValidEmail(email: String): Boolean {
     return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()
 }
 
+/**
+ * Checks the strength of the provided password.
+ *
+ * @param   pass    The password to check.
+ * @return  A boolean that will be set to true if the password
+ * has at least 6 characters, and will be false otherwise.
+ */
 fun isValidLoginPassword(pass: String): Boolean = pass.trim().length >= 6
 
+/**
+ * Checks the strength of the provided password.
+ *
+ * @param   pass    The password to check.
+ * @return  A pair of boolean and integer. The boolean will be set to true if the password
+ * has at least 6 characters, and will be false otherwise. The integer will be set to values
+ * from 0 to 6 (both included) that will represent the strength of the password, 6 being the
+ * best possible.
+ */
 fun isValidPassword(pass: String): Pair<Boolean, Int> {
     var valid = false
     var strength = 0
@@ -69,6 +91,11 @@ fun isValidPassword(pass: String): Pair<Boolean, Int> {
     return Pair(valid, strength)
 }
 
+/**
+ * If displayed, hides the keyboard.
+ *
+ * @param   activity    The current activity.
+ */
 fun hideKeyboard(activity: Activity) {
     val imm: InputMethodManager =
         activity.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -79,6 +106,13 @@ fun hideKeyboard(activity: Activity) {
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
+/**
+ * Given a drawable, it creates a bitmap.
+ *
+ * @param   context     The current context.
+ * @param   vectorResId The resource ID of the vector.
+ * @return  A bitmap of the drawable.
+ */
 fun getBitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
     // Get the drawable.
     val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
@@ -109,6 +143,13 @@ fun getBitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
     return BitmapDescriptorFactory.fromBitmap(bitmap)
 }
 
+/**
+ * Calculates the distance between two coordinates.
+ *
+ * @param   from    The starting coordinate.
+ * @param   to      The ending coordinate.
+ * @return A float indicating the distance between them in meters.
+ */
 fun calculateDistance(from: LatLng, to: LatLng): Float {
     val latTo = to.latitude
     val lngTo = to.longitude

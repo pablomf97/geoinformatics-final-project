@@ -40,11 +40,5 @@ class Models {
             this.userEmail = user.email
             this.geoMarkers = geoMarkers
         }
-
-        constructor(data: Map<String, Any>) : this() {
-            this.userId = data["userId"] as String
-            this.userEmail = data["userEmail"] as String
-            this.geoMarkers = data["geoMarkers"] as List<String>
-        }
     }
 }
